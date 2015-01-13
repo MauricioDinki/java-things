@@ -92,7 +92,7 @@ public class Formulario implements ActionListener{
 
     	// si se preciona el boton enviarButton
         if (e.getSource() == enviarButton) {
-        	// Mostramos el mensaje de alerta y recibe los parametros(sonde aparecera,contenido,titulo,tipo)
+        	// Mostramos el mensaje de alerta y recibe los parametros(donde aparecera,contenido,titulo,tipo)
             JOptionPane.showMessageDialog(framePrincipal,"Hiciste Click En Enviar","Enviar",JOptionPane.WARNING_MESSAGE);
         }
     }
