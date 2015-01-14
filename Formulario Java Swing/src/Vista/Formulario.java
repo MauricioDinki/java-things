@@ -88,19 +88,25 @@ public class Formulario implements ActionListener{
         contenedor.add(enviarButton);
         enviarButton.addActionListener(this); //Añadimos el action listener para los eventos y le decimos que es el que esta aqui (this)
 
+        // Instanciamos la base
         BD.Conexion enlaceDB = new  BD.Conexion();
         
+        // En un try catch intentamos conectar a la base con el metodo conectarDB
         try{
             
+            // Nos conectamos
             enlaceDB.conectarDB();
-            ResultSet rsSexo = enlaceDB.consulta("call sp_getGenero()");
+            // con el metodo consulta llamamos al procedimiento sp_getGenero()
+            ResultSet rsSexo = enlaceDB.consulta("call sp_getGenero()"); 
             
+            // Con while y .next() aplicados al resultset podemos llenar el combo con los datos que trae
             while(rsSexo.next()){
-                
+                // añadimos los datos de cada columna en este caso la columna genero al las opciones del combo
                 sexoCombo.addItem(rsSexo.getString("genero"));
             }
-            
+
         } catch(SQLException exx){
+            // Si hay error lo atrapamos y lo imprimimos en la consola para saber que esta pasando
             System.out.println(exx);
         }
     }
@@ -108,29 +114,35 @@ public class Formulario implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
 
+        // Almacenamos en variables el contenido de los campos con getText()
         String nombre = nombreField.getText();
         String amaterno = aMaternoField.getText();
         String apaterno = aPaternoField.getText();
         String ser_humano = humanCheckBox.getText();
 
+        // En el caso del combobox es diferente, hay que traer el objeto seleccionado y obtenemos su valo con String.valueOf()
         Object sexoSelected = sexoCombo.getSelectedItem(); 
         String sexo = String.valueOf(sexoSelected);
 
     	// si se preciona el boton enviarButton
         if (e.getSource() == enviarButton) {
 
+            // si las variables estan vacias o el CheckBox no esta seleccionado (lo comprobamos con .isSelected()==false)
         	if (nombre.equals("")||amaterno.equals("")||apaterno.equals("")||humanCheckBox.isSelected()==false||sexo.equals("")){
 
+                // Mostramos el error
                 JOptionPane.showMessageDialog(framePrincipal,"No Se Admiten Campos Vacios","Alerta",JOptionPane.ERROR_MESSAGE);
 
-            } else {
+            } else { //Si no, intentamos la conexion y la subida
 
                 try {
 
                     BD.Conexion enlaceDB = new  BD.Conexion();
                     enlaceDB.conectarDB();
+                    // Llamamos al SP que da de alta y le pasamos las variables que definimos al principio, 
+                    // el ultimo dice humano por que el checkbox no devuelve un texto
                     ResultSet resultSet = enlaceDB.consulta("call sp_altaInformacion('"+nombre+"','"+amaterno+"','"+apaterno+"','"+sexo+"','humano');");
-
+                    
                 } catch(SQLException exx){
 
                     System.out.println(exx);
