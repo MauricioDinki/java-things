@@ -3,6 +3,8 @@ package Vista;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -85,15 +87,55 @@ public class Formulario implements ActionListener{
         enviarButton.setBounds(100,300,300,30);
         contenedor.add(enviarButton);
         enviarButton.addActionListener(this); //Añadimos el action listener para los eventos y le decimos que es el que esta aqui (this)
+
+        BD.Conexion enlaceDB = new  BD.Conexion();
+        
+        try{
+            
+            enlaceDB.conectarDB();
+            ResultSet rsSexo = enlaceDB.consulta("call sp_getGenero()");
+            
+            while(rsSexo.next()){
+                
+                sexoCombo.addItem(rsSexo.getString("genero"));
+            }
+            
+        } catch(SQLException exx){
+            System.out.println(exx);
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
+        String nombre = nombreField.getText();
+        String amaterno = aMaternoField.getText();
+        String apaterno = aPaternoField.getText();
+        String ser_humano = humanCheckBox.getText();
+
+        Object sexoSelected = sexoCombo.getSelectedItem(); 
+        String sexo = String.valueOf(sexoSelected);
+
     	// si se preciona el boton enviarButton
         if (e.getSource() == enviarButton) {
-        	// Mostramos el mensaje de alerta y recibe los parametros(donde aparecera,contenido,titulo,tipo)
-            JOptionPane.showMessageDialog(framePrincipal,"Hiciste Click En Enviar","Enviar",JOptionPane.WARNING_MESSAGE);
+
+        	if (nombre.equals("")||amaterno.equals("")||apaterno.equals("")||humanCheckBox.isSelected()==false||sexo.equals("")){
+
+                JOptionPane.showMessageDialog(framePrincipal,"No Se Admiten Campos Vacios","Alerta",JOptionPane.ERROR_MESSAGE);
+
+            } else {
+
+                try {
+
+                    BD.Conexion enlaceDB = new  BD.Conexion();
+                    enlaceDB.conectarDB();
+                    ResultSet resultSet = enlaceDB.consulta("call sp_altaInformacion('"+nombre+"','"+amaterno+"','"+apaterno+"','"+sexo+"','humano');");
+
+                } catch(SQLException exx){
+
+                    System.out.println(exx);
+                }
+            }
         }
     }
 }
