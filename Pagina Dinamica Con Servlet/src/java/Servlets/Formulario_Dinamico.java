@@ -16,15 +16,54 @@ public class Formulario_Dinamico extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
 
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Formulario_Dinamico</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet Formulario_Dinamico at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            String nombre = request.getParameter("nombrep");
+            String aPaterno = request.getParameter("paternop");
+            String aMaterno = request.getParameter("maternop");
+            String edad = request.getParameter("edadp");
+            String email = request.getParameter("emailp");
+
+
+           if((nombre == null) || (email == null) || (edad==null) || (aMaterno==null) || (aPaterno == null)) {
+
+                out.println("<!DOCTYPE html>");
+                out.println("<html>");
+                out.println("<head>");
+                out.println("<title>Formulario Dinamico con Servlets</title>");            
+                out.println("</head>");
+                out.println("<body>");
+                out.println("<h1>Formulario</h1>");
+                out.println("<form method='get' action='/Pagina_Dinamica_Con_Servlet/Formulario_Dinamico'>");
+                out.print("Tu Nombre: ");
+                out.println("<input type='text' name='nombrep'/>");
+                out.print("Apellido Paterno: ");
+                out.println("<input type='text' name='paternop'/>");
+                out.print("Apellido Materno: ");
+                out.println("<input type='text' name='maternop'/>");
+                out.print("Tu Edad: ");
+                out.println("<input type='text' name='edadp'/>");
+                out.print("Tu Email: ");
+                out.println("<input type='text' name='emailp'/>");
+                out.println("<input type='submit' name='Registrar'/>");
+                out.println("</form>");
+                out.println("</body>");
+                out.println("</html>");
+            }
+            else
+            {
+                out.println("<!DOCTYPE html>");
+                out.println("<html>");
+                out.println("<head>");
+                out.println("<title>Servlet PaginaDinamica</title>");            
+                out.println("</head>");
+                out.println("<body>");
+                out.println("Nombre: " + nombre + "");
+                out.println("Paterno: " + aPaterno + "");
+                out.println("Materno: " + aMaterno + "");
+                out.println("Edad: " + edad + "");
+                out.println("Email: " + email + "");
+                out.println("</body>");
+                out.println("</html>");
+            }
         }
     }
 
